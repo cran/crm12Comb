@@ -1,0 +1,309 @@
+---
+title: "crm12Comb: R Package of Phase I/II Adaptive Design for Drug Combinations based on CRM Design"
+author: "Junying Wang, Song Wu, Jie Yang"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{crm12Comb: R Package of Phase I/II Adaptive Design for Drug Combinations based on CRM Design}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+### Install and import the $crm12Comb$ package
+```{r setup, eval = FALSE}
+install.packages("./crm12Comb_0.1.0.tar.gz", repos = NULL, type = "source")
+library(crm12Comb)
+help(package="crm12Comb")
+```
+
+### Summary of $crm12Comb$
+The package crm12Comb is used to simulate the combined phase I and phase II adaptive dose finding design based on continual reassessment method (CRM) for drug combinations, and output the operating characteristics for design evaluations using different input scenarios/skeletons/prior distributions/link functions/other settings. The crm12Comb package contains eight functions with one main function $SIM\_phase\_I\_II()$ to realize the whole process of the design and other helper functions including $get\_ordering()$ to obtain the complete orderings for both toxicity and efficacy under drug combinations, $priorSkeketons()$ to generate toxicity/efficacy skeletons, $rBin2Corr()$ to generate correlated binary data for (toxicity, efficacy) outcomes, $toxicity\_est()$ (or $efficacy\_est()$) to estimate toxicity (or efficacy) for one enrolled patient or cohort of patients, and $randomization\_phase()$ (or $maximization\_phase()$) to perform adaptive randomization (or maximization) phase for selecting dose combination for next patient or cohort of patients allocations. The corresponding documentations can be viewed using the following statements.
+
+```{r, eval=FALSE}
+### main function, please use this function to run simulations
+?SIM_phase_I_II
+
+### helper functions need to run before simulations (pre-defined settings)
+?priorSkeletons
+
+### helper functions included in the main function SIM_phase_I_II()
+?rBin2Corr
+?ger_ordering
+?toxicity_est
+?efficacy_est
+?randomization_phase
+?maximization_phase
+```
+
+### Link functions used in CRM design
+The $crm12Comb$ package is currently able to perform various link functions based on corresponding prior distributions for both toxicity and efficacy probabilities. Let $\pi_T(d_i)$ be the toxicity probability for the $i$th dose combination $d_i$ under each toxicity ordering $m$ and toxicity skeleton $0<p_{1m}<p_{2m}<\cdots<p_{Im}<1$, 
+$$\pi_T(d_i)=P[Y_j=1|d_i]\approx F_m(d_i,\beta),\; m=1,\ldots,M$$
+
+ - **Empiric model**
+$$F_m(d_i,\beta) = d_i^{\exp(\beta)},$$
+with normal or gamma prior on $\beta$.
+
+ - **Hyperbolic tangent model**
+$$F_m(d_i,\beta) = \left(\frac{\tanh(d_i+1)}{2} \right)^{\beta},$$
+with exponential prior on $\beta$.
+
+ - **One-parameter logistic model**
+$$F_m(d_i,\beta) = \frac{1}{1+\exp(-a_0-\exp(\beta)d_i)},$$
+with fixed $a_0$ and normal or gamma prior on $\beta$.
+
+- **Two-parameter logistic model**
+$$F_m(d_i,\beta) = \frac{1}{1+\exp(-\alpha-\exp(\beta)d_i)},$$
+with normal or gamma prior on $\alpha$ and $\beta$.
+
+### Using crm12Comb
+We provided two parts of examples in this section, one is for how to implement the functions in crm12Comb package and the other one is how to obtain simulation results given a list of input values.
+
+#### Functions in crm12Comb
+Here is an example of how to use the crm12Comb to perform simulation studies given a pre-specified scenarios of true (toxicity, efficacy) probabilities among $100$ iterations, where the $priorSkeletons()$ function is used to generate the toxicity skeleton and efficacy skeleton and $SIM\_phase\_I\_II()$ function is used to run the simulation for $100$ iterations for this example.
+
+The pre-defined true (toxicity, efficacy) probabilities are defined by two doses $A$ and $B$ with 4 levels for each dose, denoting by $1$ to $4$ as toxicity and efficacy from low to high.
+```{r table1, echo=FALSE, message=FALSE, warnings=FALSE, results='asis'}
+tabl1 <- "
+|          |             | Scenario    |             |             |
+|----------|-------------|-------------|-------------|-------------|
+|          |  	         | Doses of A  |  	         |  	         |
+|Doses of B|      1	     |      2	     |      3	     |      4	     |
+|4	       | (0.20,0.24) | **(0.24,0.35)** | (0.35,0.45) | (0.40,0.50) |
+|3	       | (0.12,0.18) | (0.16,0.22) | **(0.22,0.35)** | **(0.25,0.40)** |
+|2	       | (0.06,0.10) | (0.10,0.15) | (0.14,0.25) | **(0.20,0.35)** |
+|1	       | (0.02,0.05) | (0.04,0.10) | (0.08,0.15) | **(0.12,0.32)** |
+"
+cat(tabl1)
+```
+
+Toxicity skeleton and efficacy skeleton are further needed to be generated before conducting the simulations. Here we assume the empiric link function with normal prior distribution.
+```{r, eval = TRUE}
+library(crm12Comb)
+# generate skeletons
+DLT_skeleton <- priorSkeletons(updelta=0.025, target=0.3, npos=10, ndose=16, 
+                               model = "empiric", prior = "normal", beta_mean=0)
+print(paste0("DLT skeleton is: ", paste(round(DLT_skeleton,3), collapse=", ")))
+
+Efficacy_skeleton <- priorSkeletons(updelta=0.025, target=0.5, npos=10, ndose=16, 
+                                    model = "empiric", prior = "normal", beta_mean=0)
+print(paste0("Efficacy skeleton is: ", paste(round(Efficacy_skeleton,3), collapse=", ")))
+```
+
+According to the above pre-specified scenario and skeletons,  we can run the simulation by $100$ times through phase I/II adaptive design for drug combinations based on CRM and obtain the $9$ operating characteristics shown below.
+```{r, eval = TRUE}
+scenario <- matrix(c(0.02, 0.05,
+                     0.04, 0.10,
+                     0.08, 0.15,
+                     0.12, 0.32,
+                     0.06, 0.10,
+                     0.10, 0.15,
+                     0.14, 0.25,
+                     0.20, 0.35,
+                     0.12, 0.18,
+                     0.16, 0.22,
+                     0.22, 0.35,
+                     0.25, 0.40,
+                     0.20, 0.24,
+                     0.24, 0.35,
+                     0.35, 0.45,
+                     0.40, 0.50), ncol=2, byrow = TRUE)
+
+# simulate 100 trials under the same model and prior distribution
+simRes <- SIM_phase_I_II(nsim=100, Nmax=40, DoseComb=scenario, input_doseComb_forMat=c(4,4), 
+                         input_type_forMat="matrix", input_Nphase=20,
+                         input_DLT_skeleton=DLT_skeleton, 
+                         input_efficacy_skeleton=Efficacy_skeleton,
+                         input_DLT_thresh=0.3, input_efficacy_thresh=0.3,
+                         input_cohortsize=1, input_corr=0,
+                         input_early_stopping_safety_thresh=0.33,
+                         input_early_stopping_futility_thresh=0.2,
+                         input_model="empiric", input_para_prior="normal",
+                         input_beta_mean=0, input_beta_sd=sqrt(1.34),
+                         input_theta_mean=0, input_theta_sd=sqrt(1.34))
+simRes[1:9]
+```
+
+After obtaining the simulation results, the data for each patient allocation with toxicity and efficacy outcomes under each trial is stored sequentially in a list named "datALL" in $simRes$. This allows a comprehensive visualization of sequential patient enrollment with toxicity and efficacy outcomes and a summary of patient allocation by dose combinations can be plotted. 
+
+The first plot is for the sequential patient enrollment of the first simulated trial, where the red (green) half dot denoted patient with toxicity (efficacy) outcome.
+```{r, eval = TRUE, fig.width=10, fig.height=5}
+# generate plots of patient enrollment of the first trial
+enroll_patient_plot(simRes$datALL[[1]])
+```
+
+The second plot is for patient allocations by dose combination of the first simulated trial shown by a histogram.
+```{r, eval = TRUE, fig.width=8, fig.height=6}
+# generate plots of patient allocations by dose levels of the first trial
+patient_allocation_plot(simRes$datALL[[1]])
+```
+
+In addition, the overall optimal dose combination (ODC) selection can be plotted by a histogram among total of $100$ simulations for this example.
+```{r, eval = TRUE, fig.width=8, fig.height=6}
+# generate plots of ODC selections among all trials
+ODC_plot(simRes)
+```
+
+#### Simulations of list of input values
+If there are lists of input values for several parameters, we can use the for loop with the $SIM\_phase\_I\_II()$ function to obtain multiple sets of results. We provided the examples of the six scenarios given by Wages and Conaway (2014). 
+
+We further added several different inputs for parameters including (1) maximum sample size $N = c(40, 50, 60)$, (2) pre-specified toxicity and efficacy skeletons $Skeleton = c(1,2)$, (3) number of patients for determination of randomization phase $nR=c(10, 20, 30)$, and (4) Association parameter for efficacy and toxicity $corr=c(0, -2.049, 0.814)$. The results are saved as "examples_results.RData" in the crm12Comb package. The result data can directly be used to obtain plots comparing among four different link functions using $sample\_plot()$ function.
+
+Here are the six scenarios. 
+```{r table2, echo=FALSE, message=FALSE, warnings=FALSE, results='asis'}
+tabl2 <- "
+|          |          |         | True  (toxicity, efficacy)  probabilities   ||
+|----------|----------|------------------|------------------|------------------|
+|          | Doses of |                  |     Doses of B   |                  |
+| Scenario | A        |      1           |      2           |      3           |
+| 1        | 3        | (0.08, 0.15)     | (0.10, 0.20)     | **(0.18, 0.40)** |
+|          | 2        | (0.04, 0.10)     | (0.06, 0.16)     | (0.08, 0.20)     |
+|          | 1        | (0.02, 0.05)     | (0.04, 0.10)     | (0.06, 0.15)     |
+| 2        | 3        | (0.16, 0.20)     | **(0.25, 0.35)** | (0.35, 0.50)     |
+|          | 2        | (0.10, 0.10)     | (0.14, 0.25)     | **(0.20, 0.40)** |
+|          | 1        | (0.06, 0.05)     | (0.08, 0.10)     | (0.12, 0.20)     |
+| 3        | 3        | **(0.24, 0.40)** | (0.33, 0.50)     | (0.40, 0.60)     |
+|          | 2        | (0.16, 0.20)     | **(0.22, 0.40)** | (0.35, 0.50)     |
+|          | 1        | (0.08, 0.10)     | (0.14, 0.25)     | **(0.20, 0.35)** |
+| 4        | 3        | (0.33, 0.50)     | (0.40, 0.60)     | (0.55, 0.70)     |
+|          | 2        | **(0.18, 0.35)** | **(0.25, 0.45)** | (0.42, 0.55)     |
+|          | 1        | (0.12, 0.20)     | **(0.20, 0.40)** | (0.35, 0.50)     |
+| 5        | 3        | (0.45, 0.55)     | (0.55, 0.65)     | (0.75, 0.75)     |
+|          | 2        | **(0.20, 0.36)** | (0.35, 0.49)     | (0.40, 0.62)     |
+|          | 1        | (0.15, 0.20)     | **(0.20, 0.35)** | **(0.25, 0.50)** |
+| 6        | 3        | (0.65, 0.60)     | (0.80, 0.65)     | (0.85, 0.70)     |
+|          | 2        | (0.55, 0.55)     | (0.70, 0.60)     | (0.75, 0.65)     |
+|          | 1        | (0.50, 0.50)     | (0.55, 0.55)     | (0.65, 0.60)     |
+"
+cat(tabl2)
+```
+
+The code below shows how to input the true probabilities in the form of matrix with scenario 1 as an example.
+```{r, eval = FALSE}
+scenario1 <- matrix(c(0.02, 0.05,
+                      0.04, 0.10,
+                      0.06, 0.15,
+                      0.04, 0.10,
+                      0.06, 0.16,
+                      0.08, 0.20,
+                      0.08, 0.15,
+                      0.10, 0.20,
+                      0.18, 0.40), ncol=2, byrow = TRUE)
+```
+
+The example code shows an approach to obtain the results with list of input values. Based on the scenarios, we first construct the total of $54$ in consist of conditions $2$ pre-specified toxicity and efficacy skeletons, $3$ maximum sample sizes, $3$ numbers of patients for determination of randomization phase and $3$ association parameters for efficacy and toxicity.
+```{r, eval = FALSE}
+orderings <- function(DLT1, DLT2, ORR1, ORR2){
+  input_Nphase <- c(10, 20, 30)
+  input_corr <- c(0, -2.049, 0.814)
+  input_N <- c(40, 50, 60)
+  DLTs <- list(DLT1, DLT2)
+  ORRs <- list(ORR1, ORR2)
+  
+  conds <- list()
+  i <- 1
+  for (s in 1:2){
+    for (n in 1:3){
+      for (np in 1:3){
+        for (c in 1:3){
+          conds[[i]] <- list(DLT=DLTs[[s]], ORR=ORRs[[s]], 
+                             N=input_N[n], Nphase=input_Nphase[np], corr=input_corr[c])
+          i <- i+1
+        }
+      }
+    }
+  }
+
+  return(conds)
+}
+```
+
+The second step is to build the output data set with detailed names of 9 operating characteristics. 
+```{r, eval = FALSE}
+output <- data.frame(setting = character(), safe = double(), 
+                     target = double(), toxic = double(), 
+                     avgSS = double(), prop_ODC = double(),
+                     stop_safety = double(), stop_futility = double(), 
+                     o_DLT = double(), o_ORR = double())
+
+colnames(output) <- c("Design Settings", 
+"Probability of recommending safe/ineffective combinations as ODC", 
+"Probability of recommending target combinations as ODC", 
+"Probability of recommending overly toxic combinations as ODC",
+"Mean # of patients enrolled", "Proportion of patients allocated to true ODC(s)", 
+"Proportion stopped for safety", "Proportion stopped for futility", 
+"Observed DLT rate", "Observed response rate")
+```
+
+The third step is to specify two sets of toxicity and efficacy skeletons so that we can plug the skeletons into the $orderings()$ function to stored $54$ conditions into a list named $conds$.
+```{r, eval = FALSE}
+# empiric, normal prior
+DLT_skeleton1 <- priorSkeletons(updelta=0.045, target=0.3, npos=5, ndose=9, 
+                                model = "empiric", prior = "normal", beta_mean=0)
+DLT_skeleton2 <- priorSkeletons(updelta=0.06, target=0.3, npos=4, ndose=9, 
+                                model = "empiric", prior = "normal", beta_mean=0)
+Efficacy_skeleton1 <- priorSkeletons(updelta=0.045, target=0.5, npos=5, ndose=9, 
+                                     model = "empiric", prior = "normal", beta_mean=0)
+Efficacy_skeleton2 <- priorSkeletons(updelta=0.06, target=0.5, npos=4, ndose=9, 
+                                     model = "empiric", prior = "normal", beta_mean=0)
+
+conds <- orderings(DLT1=DLT_skeleton1, DLT2=DLT_skeleton2, 
+                  ORR1=Efficacy_skeleton1, ORR2=Efficacy_skeleton2)
+```
+
+The last step is to iterate over the $6$ scenarios and $54$ conditions each with $1000$ simulations, storing the results into the output data set after each iteration.
+```{r, eval = FALSE}
+for (s in 1:length(SC)){
+  for (c in 1:length(conds)){
+    curr <- SIM_phase_I_II(nsim=1000, Nmax=conds[[c]]$N, DoseComb=SC[[s]], 
+                           input_doseComb_forMat=c(3,3), 
+                           input_type_forMat="matrix", 
+                           input_Nphase=conds[[c]]$Nphase,
+                           input_DLT_skeleton=conds[[c]]$DLT, 
+                           input_efficacy_skeleton=conds[[c]]$ORR,
+                           input_DLT_thresh=0.3, input_efficacy_thresh=0.3, 
+                           input_cohortsize=1, input_corr=conds[[c]]$corr,
+                           input_early_stopping_safety_thresh=0.33, 
+                           input_early_stopping_futility_thresh=0.2,
+                           input_model="empiric", input_para_prior="normal", 
+                           input_beta_mean=0, input_beta_sd=sqrt(1.34), 
+                           input_theta_mean=0, input_theta_sd=sqrt(1.34))
+    currTmp <- data.frame(currname, curr$prob_safe, curr$prob_target, curr$prob_toxic, curr$mean_SS, curr$mean_ODC, 
+                          curr$prob_stop_safety, curr$prob_stop_futility, curr$mean_DLT, curr$mean_ORR)
+    currTmp$N <- conds[[c]]$N
+    currTmp$Skeleton <- ifelse(c<=27, 1, 2)
+    currTmp$Nphase <- conds[[c]]$Nphase
+    currTmp$corr <- conds[[c]]$corr
+    output <- rbind(output, currTmp)
+  }
+}
+```
+
+The process above is an example of using one link function "empiric" with normal prior. We also ran other link functions including "tanh" with exponential prior, "one-parameter logistic" with normal and gamma priors. We stored the corresponding results into a data set in the $crm12Comb$ package.
+
+Here are two examples of plotting the result data by fixing three parameters and drawing the relationship between the specific operating characteristic and the non-fixed parameter. The first example showing the relationship between "Probability of ODC as target combinations" versus (1) "Maximum sample size" after fixing (2), (3) and (4).
+```{r, eval = TRUE, fig.width=8, fig.height=6}
+sample_plot(dat, outcome = "curr.prob_target",
+            outname = "Probability of ODC as target combinations",
+            N = NULL, nR = 20, Skeleton = 1, corr = 0)
+```
+
+The second example showing the relationship between "Proportion of patients allocated to true ODC(s)" versus (4) "Association parameter for efficacy and toxicity" after fixing (1), (2) and (3).
+```{r, eval = TRUE, fig.width=8, fig.height=6}
+sample_plot(dat, outcome = "curr.mean_ODC",
+            outname = "Proportion of patients allocated to true ODC(s)",
+            N = 60, nR = 30, Skeleton = 1, corr = NULL)
+```
+
+### References
+Murtaugh, P. A., & Fisher, L. D. (1990). Bivariate binary models of efficacy and toxicity in dose-ranging trials. Communications in Statistics-Theory and Methods, 19(6), 2003-2020. https://doi.org/10.1080/03610929008830305
+
+O'Quigley, J., Pepe, M., & Fisher, L. (1990). Continual reassessment method: a practical design for phase 1 clinical trials in cancer. Biometrics, 33-48. https://doi.org/10.2307/2531628
+
+Thall, P. F., & Cook, J. D. (2004). Dose‐finding based on efficacy–toxicity trade‐offs. Biometrics, 60(3), 684-693. https://doi.org/10.1111/j.0006-341X.2004.00218.x
+
+Lee, S. M., & Cheung, Y. K. (2009). Model calibration in the continual reassessment method. Clinical Trials, 6(3), 227-238. https://doi.org/10.1177/1740774509105076
+
+Wages, N. A., & Conaway, M. R. (2013). Specifications of a continual reassessment method design for phase I trials of combined drugs. Pharmaceutical statistics, 12(4), 217-224. https://doi.org/10.1002/pst.1575
+
+Wages, N. A., & Conaway, M. R. (2014). Phase I/II adaptive design for drug combination oncology trials. Statistics in medicine, 33(12), 1990-2003. https://doi.org/10.1002/sim.6097
+
