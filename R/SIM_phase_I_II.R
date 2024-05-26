@@ -36,6 +36,7 @@
 #' @param input_alphaT_sd A number.
 #' @param input_alphaT_shape A number.
 #' @param input_alphaT_inverse_scale A number.
+#' @param random_seed A number.
 #'
 #' @return list of operating characteristics
 #' @export
@@ -57,7 +58,8 @@ SIM_phase_I_II <- function(nsim, Nmax, DoseComb, input_doseComb_forMat, input_ty
                            input_alpha_mean=3, input_alpha_sd=1,
                            input_alpha_shape=1, input_alpha_inverse_scale=1,
                            input_alphaT_mean=3, input_alphaT_sd=1,
-                           input_alphaT_shape=1, input_alphaT_inverse_scale=1){
+                           input_alphaT_shape=1, input_alphaT_inverse_scale=1,
+                           random_seed = 42){
 
   ndoses <- length(DoseComb)
 
@@ -83,12 +85,13 @@ SIM_phase_I_II <- function(nsim, Nmax, DoseComb, input_doseComb_forMat, input_ty
   dn_check_all <- NULL
   datALL <- list()
 
+  nmx <- Nmax*2 # for generating seeds
+  
   for (n in 1:nsim){
     currDat <- data.frame(DoseLevel=integer(), DLT=integer(), ORR=integer())
     stop <- 0
     j <- 0
     while (j <= Nmax){
-
       tox <- toxicity_est(Dat=currDat, I=ndoses, M=nM, M_prob=input_M_prob,
                           DLT_skeleton=DLT_orderings, DLT_thresh=input_DLT_thresh,
                           model=input_model, para_prior=input_para_prior,
@@ -96,7 +99,8 @@ SIM_phase_I_II <- function(nsim, Nmax, DoseComb, input_doseComb_forMat, input_ty
                           intcpt_lgst1=input_intcpt_lgst1,
                           beta_shape=input_beta_shape, beta_inverse_scale=input_beta_inverse_scale,
                           alpha_mean=input_alpha_mean, alpha_sd=input_alpha_sd,
-                          alpha_shape=input_alpha_shape, alpha_inverse_scale=input_alpha_inverse_scale)
+                          alpha_shape=input_alpha_shape, alpha_inverse_scale=input_alpha_inverse_scale, 
+                          seed=random_seed+nsim*nmx+(n-1)*nmx+j+1)
       input_M_prob <- tox$M_prob
 
       eff <- efficacy_est(Dat=currDat, AR=tox$AR, I=ndoses, K=nK, K_prob=input_K_prob,
@@ -106,13 +110,17 @@ SIM_phase_I_II <- function(nsim, Nmax, DoseComb, input_doseComb_forMat, input_ty
                           theta_intcpt_lgst1=input_theta_intcpt_lgst1,
                           theta_shape=input_theta_shape, theta_inverse_scale=input_theta_inverse_scale,
                           alphaT_mean=input_alphaT_mean, alphaT_sd=input_alphaT_sd,
-                          alphaT_shape=input_alphaT_shape, alphaT_inverse_scale=input_alphaT_inverse_scale)
+                          alphaT_shape=input_alphaT_shape, alphaT_inverse_scale=input_alphaT_inverse_scale, 
+                          seed=random_seed+2*nsim*nmx+(n-1)*nmx+j+1, 
+                          seed_rand=random_seed+3*nsim*nmx+(n-1)*nmx+j+1, 
+                          seed_max=random_seed+4*nsim*nmx+(n-1)*nmx+j+1)
       input_K_prob <- eff$K_prob
 
       tempDat <- data.frame(rep(eff$di,input_cohortsize), rBin2Corr(cohortsize=input_cohortsize,
                                                                     pT=DoseComb[eff$di,1],
                                                                     pE=DoseComb[eff$di,2],
-                                                                    psi=input_corr))
+                                                                    psi=input_corr, 
+                                                                    seed=random_seed+(n-1)*nmx+j+1))
       names(tempDat) <- c("DoseLevel", "DLT", "ORR")
       currDat <- rbind(currDat, tempDat)
 
@@ -190,10 +198,21 @@ SIM_phase_I_II <- function(nsim, Nmax, DoseComb, input_doseComb_forMat, input_ty
   mean_DLT <- round(mean(O_DLT), 3)
   mean_ORR <- round(mean(O_ORR), 3)
 
-  return(list(prob_safe=prob_safe, prob_target=prob_target, prob_toxic=prob_toxic,
-              mean_SS=mean_SS, mean_ODC=mean_ODC,
-              prob_stop_safety=prob_stop_safety, prob_stop_futility=prob_stop_futility,
-              mean_DLT=mean_DLT, mean_ORR=mean_ORR,
-              Npatient=Npatient, ODC=ODC,
-              prop_ODC=prop_ODC, datALL=datALL))
+  outlist <- list(prob_safe = prob_safe,
+                  prob_target = prob_target,
+                  prob_toxic = prob_toxic,
+                  mean_SS = mean_SS,
+                  mean_ODC = mean_ODC,
+                  prob_stop_safety = prob_stop_safety,
+                  prob_stop_futility = prob_stop_futility,
+                  mean_DLT = mean_DLT,
+                  mean_ORR = mean_ORR,
+                  Npatient = Npatient,
+                  ODC = ODC,
+                  prop_ODC = prop_ODC,
+                  datALL = datALL)
+              
+  class(outlist) <- "OutList"
+  
+  return(outlist)
 }

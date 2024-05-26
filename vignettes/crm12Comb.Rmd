@@ -11,7 +11,7 @@ vignette: >
 
 ### Install and import the $crm12Comb$ package
 ```{r setup, eval = FALSE}
-install.packages("./crm12Comb_0.1.0.tar.gz", repos = NULL, type = "source")
+install.packages("./crm12Comb_0.1.4.tar.gz", repos = NULL, type = "source")
 library(crm12Comb)
 help(package="crm12Comb")
 ```
@@ -119,8 +119,18 @@ simRes <- SIM_phase_I_II(nsim=100, Nmax=40, DoseComb=scenario, input_doseComb_fo
                          input_early_stopping_futility_thresh=0.2,
                          input_model="empiric", input_para_prior="normal",
                          input_beta_mean=0, input_beta_sd=sqrt(1.34),
-                         input_theta_mean=0, input_theta_sd=sqrt(1.34))
-simRes[1:9]
+                         input_theta_mean=0, input_theta_sd=sqrt(1.34),
+                         random_seed=23)
+
+print(paste0("Probability of recommending safe/ineffective combinations as ODC is ", simRes$prob_safe))
+print(paste0("Probability of recommending target combinations as ODC is ", simRes$prob_target))
+print(paste0("Probability of recommending overly toxic combinations as ODC is ", simRes$prob_toxic))
+print(paste0("Mean # of patients enrolled is ", simRes$mean_SS))
+print(paste0("Proportion of patients allocated to true ODC(s) is ", simRes$mean_ODC))
+print(paste0("Proportion stopped for safety is ", simRes$prob_stop_safety))
+print(paste0("Proportion stopped for futility is ", simRes$prob_stop_futility))
+print(paste0("Observed DLT rate is ", simRes$mean_DLT))
+print(paste0("Observed response rate is ", simRes$mean_ORR))
 ```
 
 After obtaining the simulation results, the data for each patient allocation with toxicity and efficacy outcomes under each trial is stored sequentially in a list named "datALL" in $simRes$. This allows a comprehensive visualization of sequential patient enrollment with toxicity and efficacy outcomes and a summary of patient allocation by dose combinations can be plotted. 
@@ -144,9 +154,9 @@ ODC_plot(simRes)
 ```
 
 #### Simulations of list of input values
-If there are lists of input values for several parameters, we can use the for loop with the $SIM\_phase\_I\_II()$ function to obtain multiple sets of results. We provided the examples of the six scenarios given by Wages and Conaway (2014). 
+If there are lists of input values for several parameters, we can use the for loop with the $SIM\_phase\_I\_II()$ function to obtain multiple sets of results. 
 
-We further added several different inputs for parameters including (1) maximum sample size $N = c(40, 50, 60)$, (2) pre-specified toxicity and efficacy skeletons $Skeleton = c(1,2)$, (3) number of patients for determination of randomization phase $nR=c(10, 20, 30)$, and (4) Association parameter for efficacy and toxicity $corr=c(0, -2.049, 0.814)$. The results are saved as "examples_results.RData" in the crm12Comb package. The result data can directly be used to obtain plots comparing among four different link functions using $sample\_plot()$ function.
+We provided the examples of the six scenarios given by Wages and Conaway (2014). We included several different commonly considered values of the parameters including (1) maximum sample size $N = c(40, 50, 60)$, (2) pre-specified toxicity and efficacy skeletons $Skeleton = c(1,2)$, (3) number of patients for determination of randomization phase $nR=c(10, 20, 30)$, and (4) Association parameter for efficacy and toxicity $corr=c(0, -2.049, 0.814)$ were based on simulation results given by Thall and Cook (2004). The results are saved as "examples_results.RData" in the crm12Comb package. The result data can directly be used to obtain plots comparing among four different link functions using $sample\_plot()$ function.
 
 Here are the six scenarios. 
 ```{r table2, echo=FALSE, message=FALSE, warnings=FALSE, results='asis'}
@@ -201,12 +211,15 @@ orderings <- function(DLT1, DLT2, ORR1, ORR2){
   
   conds <- list()
   i <- 1
+  conds <- list()
+  i <- 1
   for (s in 1:2){
     for (n in 1:3){
       for (np in 1:3){
         for (c in 1:3){
-          conds[[i]] <- list(DLT=DLTs[[s]], ORR=ORRs[[s]], 
-                             N=input_N[n], Nphase=input_Nphase[np], corr=input_corr[c])
+          conds[[i]] <- list(DLT=DLTs[[s]], ORR=ORRs[[s]], sklnum = s, 
+                             N=input_N[n], Nphase=input_Nphase[np], 
+                             corr=input_corr[c])
           i <- i+1
         }
       }
@@ -215,23 +228,25 @@ orderings <- function(DLT1, DLT2, ORR1, ORR2){
 
   return(conds)
 }
+
+SC <- list(scenario1, scenario2, scenario3, scenario4, scenario5, scenario6)
 ```
 
 The second step is to build the output data set with detailed names of 9 operating characteristics. 
 ```{r, eval = FALSE}
-output <- data.frame(setting = character(), safe = double(), 
-                     target = double(), toxic = double(), 
-                     avgSS = double(), prop_ODC = double(),
-                     stop_safety = double(), stop_futility = double(), 
-                     o_DLT = double(), o_ORR = double())
+output <- data.frame(Scenario = double(), Skeleton = double(), 
+  N = double(), nR = double(), corr = double(), safe = double(), 
+  target = double(), toxic = double(), avgSS = double(), 
+  prop_ODC = double(), stop_safety = double(), stop_futility = double(), 
+  o_DLT = double(), o_ORR = double())
 
-colnames(output) <- c("Design Settings", 
-"Probability of recommending safe/ineffective combinations as ODC", 
-"Probability of recommending target combinations as ODC", 
-"Probability of recommending overly toxic combinations as ODC",
-"Mean # of patients enrolled", "Proportion of patients allocated to true ODC(s)", 
-"Proportion stopped for safety", "Proportion stopped for futility", 
-"Observed DLT rate", "Observed response rate")
+colnames(output) <- c("Scenario", "Skeleton", "N", "nR", "corr", 
+  "Probability of recommending safe/ineffective combinations as ODC", 
+  "Probability of recommending target combinations as ODC", 
+  "Probability of recommending overly toxic combinations as ODC",
+  "Mean # of patients enrolled", "Proportion of patients allocated to true ODC(s)", 
+  "Proportion stopped for safety", "Proportion stopped for futility", 
+  "Observed DLT rate", "Observed response rate")
 ```
 
 The third step is to specify two sets of toxicity and efficacy skeletons so that we can plug the skeletons into the $orderings()$ function to stored $54$ conditions into a list named $conds$.
@@ -254,42 +269,48 @@ The last step is to iterate over the $6$ scenarios and $54$ conditions each with
 ```{r, eval = FALSE}
 for (s in 1:length(SC)){
   for (c in 1:length(conds)){
-    curr <- SIM_phase_I_II(nsim=1000, Nmax=conds[[c]]$N, DoseComb=SC[[s]], 
-                           input_doseComb_forMat=c(3,3), 
-                           input_type_forMat="matrix", 
-                           input_Nphase=conds[[c]]$Nphase,
-                           input_DLT_skeleton=conds[[c]]$DLT, 
-                           input_efficacy_skeleton=conds[[c]]$ORR,
-                           input_DLT_thresh=0.3, input_efficacy_thresh=0.3, 
-                           input_cohortsize=1, input_corr=conds[[c]]$corr,
-                           input_early_stopping_safety_thresh=0.33, 
-                           input_early_stopping_futility_thresh=0.2,
-                           input_model="empiric", input_para_prior="normal", 
-                           input_beta_mean=0, input_beta_sd=sqrt(1.34), 
-                           input_theta_mean=0, input_theta_sd=sqrt(1.34))
-    currTmp <- data.frame(currname, curr$prob_safe, curr$prob_target, curr$prob_toxic, curr$mean_SS, curr$mean_ODC, 
-                          curr$prob_stop_safety, curr$prob_stop_futility, curr$mean_DLT, curr$mean_ORR)
-    currTmp$N <- conds[[c]]$N
-    currTmp$Skeleton <- ifelse(c<=27, 1, 2)
-    currTmp$Nphase <- conds[[c]]$Nphase
-    currTmp$corr <- conds[[c]]$corr
-    output <- rbind(output, currTmp)
+    print(paste0("Scenario=", s, ", skeleton=", conds[[c]]$sklnum, 
+                 ", N=", conds[[c]]$N, ", nR=", conds[[c]]$Nphase, 
+                 ", corr=", conds[[c]]$corr))
+    curr = SIM_phase_I_II(nsim=1000, Nmax=conds[[c]]$N, DoseComb=SC[[s]], 
+                          input_doseComb_forMat=c(3,3), 
+                          input_type_forMat="matrix", 
+                          input_Nphase=conds[[c]]$Nphase,
+                          input_DLT_skeleton=conds[[c]]$DLT, 
+                          input_efficacy_skeleton=conds[[c]]$ORR,
+                          input_DLT_thresh=0.3, input_efficacy_thresh=0.3, 
+                          input_cohortsize=1, input_corr=conds[[c]]$corr,
+                          input_early_stopping_safety_thresh=0.33, 
+                          input_early_stopping_futility_thresh=0.2,
+                          input_model="empiric", input_para_prior="normal", 
+                          input_beta_mean=0, input_beta_sd=sqrt(1.34), 
+                          input_theta_mean=0, input_theta_sd=sqrt(1.34), 
+                          random_seed=42)
+    currTmp = data.frame(s, conds[[c]]$sklnum, conds[[c]]$N, conds[[c]]$Nphase, conds[[c]]$corr,
+                         curr$prob_safe, curr$prob_target, curr$prob_toxic, curr$mean_SS, curr$mean_ODC, 
+                         curr$prob_stop_safety, curr$prob_stop_futility, curr$mean_DLT, curr$mean_ORR)
+    output = rbind(output, currTmp)
   }
 }
 ```
 
-The process above is an example of using one link function "empiric" with normal prior. We also ran other link functions including "tanh" with exponential prior, "one-parameter logistic" with normal and gamma priors. We stored the corresponding results into a data set in the $crm12Comb$ package.
+The process above is an example of using one link function "empiric" with normal prior. We also ran other link functions including "tanh" with exponential prior, "one-parameter logistic" with normal and gamma priors. We stored the corresponding results into a data set located at $inst/extdata/example\_results.RData$ in the $crm12Comb$ package.
+```{r load-data, echo=TRUE, results='hide'}
+file_path <- system.file("extdata", "examples_results.RData", package = "crm12Comb")
+if (file_path == "") stop("Data file not found")
+load(file_path)
+```
 
 Here are two examples of plotting the result data by fixing three parameters and drawing the relationship between the specific operating characteristic and the non-fixed parameter. The first example showing the relationship between "Probability of ODC as target combinations" versus (1) "Maximum sample size" after fixing (2), (3) and (4).
 ```{r, eval = TRUE, fig.width=8, fig.height=6}
-sample_plot(dat, outcome = "curr.prob_target",
+sample_plot(examples_results, outcome = "prob_target",
             outname = "Probability of ODC as target combinations",
-            N = NULL, nR = 20, Skeleton = 1, corr = 0)
+            N = NULL, nR = 30, Skeleton = 1, corr = 0)
 ```
 
 The second example showing the relationship between "Proportion of patients allocated to true ODC(s)" versus (4) "Association parameter for efficacy and toxicity" after fixing (1), (2) and (3).
 ```{r, eval = TRUE, fig.width=8, fig.height=6}
-sample_plot(dat, outcome = "curr.mean_ODC",
+sample_plot(examples_results, outcome = "mean_ODC",
             outname = "Proportion of patients allocated to true ODC(s)",
             N = 60, nR = 30, Skeleton = 1, corr = NULL)
 ```

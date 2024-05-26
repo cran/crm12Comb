@@ -17,12 +17,12 @@
 #' @export
 
 sample_plot <- function(dat, outcome, outname, N = NULL, nR = NULL, Skeleton = NULL, corr = NULL){
-  model <- NULL
+  Model <- NULL
   if (is.null(N)){
     subdat <- dat[which(dat$Skeleton == Skeleton & dat$corr == corr & dat$nR == nR),]
-    p <- ggplot2::ggplot(subdat, ggplot2::aes_string(x="N", y=outcome, group="model")) +
-      ggplot2::geom_point(ggplot2::aes(color=model)) +
-      ggplot2::geom_line(ggplot2::aes(color=model)) +
+    p <- ggplot2::ggplot(subdat, ggplot2::aes_string(x="N", y=outcome, group="Model")) +
+      ggplot2::geom_point(ggplot2::aes(color=Model)) +
+      ggplot2::geom_line(ggplot2::aes(color=Model)) +
       ggplot2::scale_color_manual(values = c("#9900CC", "#0099CC", "#00CC66", "#FF6600")) +
       ggplot2::facet_wrap(~Scenario, labeller = ggplot2::labeller(Scenario = ~ paste("Scenario:", .), .multi_line = FALSE), scales = "free_y") +
       ggplot2::scale_x_continuous(breaks=unique(dat$N)) + 
@@ -30,9 +30,9 @@ sample_plot <- function(dat, outcome, outname, N = NULL, nR = NULL, Skeleton = N
       ggplot2::theme(legend.position = "bottom")
   } else if (is.null(nR)){
     subdat <- dat[which(dat$Skeleton == Skeleton & dat$corr == corr & dat$N == N),]
-    p <- ggplot2::ggplot(subdat, ggplot2::aes_string(x="nR", y=outcome, group="model")) +
-      ggplot2::geom_point(ggplot2::aes(color=model)) +
-      ggplot2::geom_line(ggplot2::aes(color=model)) +
+    p <- ggplot2::ggplot(subdat, ggplot2::aes_string(x="nR", y=outcome, group="Model")) +
+      ggplot2::geom_point(ggplot2::aes(color=Model)) +
+      ggplot2::geom_line(ggplot2::aes(color=Model)) +
       ggplot2::scale_color_manual(values = c("#9900CC", "#0099CC", "#00CC66", "#FF6600")) +
       ggplot2::facet_wrap(~Scenario, labeller = ggplot2::labeller(Scenario = ~ paste("Scenario:", .), .multi_line = FALSE), scales = "free_y") +
       ggplot2::scale_x_continuous(breaks=unique(dat$nR)) + 
@@ -40,9 +40,9 @@ sample_plot <- function(dat, outcome, outname, N = NULL, nR = NULL, Skeleton = N
       ggplot2::theme(legend.position = "bottom")
   } else if (is.null(corr)){
     subdat <- dat[which(dat$Skeleton == Skeleton & dat$nR == nR & dat$N == N),]
-    p <- ggplot2::ggplot(subdat, ggplot2::aes_string(x="corr", y=outcome, group="model")) +
-      ggplot2::geom_point(ggplot2::aes(color=model)) +
-      ggplot2::geom_line(ggplot2::aes(color=model)) +
+    p <- ggplot2::ggplot(subdat, ggplot2::aes_string(x="corr", y=outcome, group="Model")) +
+      ggplot2::geom_point(ggplot2::aes(color=Model)) +
+      ggplot2::geom_line(ggplot2::aes(color=Model)) +
       ggplot2::scale_color_manual(values = c("#9900CC", "#0099CC", "#00CC66", "#FF6600")) +
       ggplot2::facet_wrap(~Scenario, labeller = ggplot2::labeller(Scenario = ~ paste("Scenario:", .), .multi_line = FALSE), scales = "free_y") +
       ggplot2::scale_x_continuous(breaks=unique(dat$corr)) + 
@@ -50,9 +50,9 @@ sample_plot <- function(dat, outcome, outname, N = NULL, nR = NULL, Skeleton = N
       ggplot2::theme(legend.position = "bottom")
   } else if (is.null(Skeleton)){
     subdat <- dat[which(dat$corr == corr & dat$nR == nR & dat$N == N),]
-    p <- ggplot2::ggplot(subdat, ggplot2::aes_string(x="Skeleton", y=outcome, group="model")) +
-      ggplot2::geom_point(ggplot2::aes(color=model)) +
-      ggplot2::geom_line(ggplot2::aes(color=model)) +
+    p <- ggplot2::ggplot(subdat, ggplot2::aes_string(x="Skeleton", y=outcome, group="Model")) +
+      ggplot2::geom_point(ggplot2::aes(color=Model)) +
+      ggplot2::geom_line(ggplot2::aes(color=Model)) +
       ggplot2::scale_color_manual(values = c("#9900CC", "#0099CC", "#00CC66", "#FF6600")) +
       ggplot2::facet_wrap(~Scenario, labeller = ggplot2::labeller(Scenario = ~ paste("Scenario:", .), .multi_line = FALSE), scales = "free_y") +
       ggplot2::scale_x_continuous(breaks=unique(dat$Skeleton)) + 

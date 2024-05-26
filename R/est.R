@@ -1,11 +1,13 @@
 #' Title: patient allocations
 #'
 #' @param pE_est A numeric vector.
+#' @param seed_m A number.
 #'
 #' @return d -> index of next recommended combined dose level
 #' @export
 #'
-maximization_phase <- function(pE_est){
+maximization_phase <- function(pE_est, seed_m=NULL){
+  set.seed(seed_m)
   d <- ifelse(length(which(pE_est==max(pE_est)))==1,
              which(pE_est==max(pE_est)),
              sample(which(pE_est==max(pE_est)),1)) # allocation to dose combination for next patient
@@ -15,12 +17,14 @@ maximization_phase <- function(pE_est){
 #' Title: patient allocations
 #'
 #' @param pE_est A numeric vector.
+#' @param seed_r A number.
 #'
 #' @return d -> index of next recommended combined dose level
 #' @export
 #'
-randomization_phase <- function(pE_est){
+randomization_phase <- function(pE_est, seed_r=NULL){
   R <- pE_est/sum(pE_est)
+  set.seed(seed_r)
   ratio1 <- stats::rmultinom(1, 1, prob = R)
   d <- which(ratio1==1)
   return(d)
@@ -46,6 +50,7 @@ randomization_phase <- function(pE_est){
 #' @param alpha_sd A number.
 #' @param alpha_shape A number.
 #' @param alpha_inverse_scale A number.
+#' @param seed A number.
 #'
 #' @return list(AR=AR, M_prob=M_prob) -> AR for acceptable set, M_prob for posterior density of toxicity orderings
 #' @export
@@ -53,16 +58,19 @@ randomization_phase <- function(pE_est){
 toxicity_est <- function(Dat, I, M, M_prob, DLT_skeleton, DLT_thresh,
                         model, para_prior,
                         beta_mean, beta_sd, intcpt_lgst1, beta_shape, beta_inverse_scale,
-                        alpha_mean, alpha_sd, alpha_shape, alpha_inverse_scale){
+                        alpha_mean, alpha_sd, alpha_shape, alpha_inverse_scale,
+                        seed=NULL){
 
   currN <- nrow(Dat)
 
   if (currN == 0){
     if (is.null(M_prob)){
       M_prob <- rep(1/M, M) # equal prob for prior information of toxicity orderings
+      set.seed(seed)
       mStar <- sample(c(1:M), 1)
     } else {
       mStar_candidate <- which(M_prob == max(M_prob))
+      set.seed(seed)
       mStar <- ifelse(length(mStar_candidate) == 1, mStar_candidate, sample(mStar_candidate, 1))
     }
     DLT_skeleton_mStar <- DLT_skeleton[[mStar]]
@@ -220,6 +228,9 @@ toxicity_est <- function(Dat, I, M, M_prob, DLT_skeleton, DLT_thresh,
 #' @param alphaT_sd A number.
 #' @param alphaT_shape A number.
 #' @param alphaT_inverse_scale A number.
+#' @param seed A number.
+#' @param seed_rand A number.
+#' @param seed_max A number.
 #'
 #' @return list(di=di, K_prob=K_prob) -> di for next recommended dose level, K_prob for posterior density of efficacy orderings
 #' @export
@@ -227,15 +238,18 @@ toxicity_est <- function(Dat, I, M, M_prob, DLT_skeleton, DLT_thresh,
 efficacy_est <- function(Dat, AR, I, K, K_prob, efficacy_skeleton, Nphase,
                         model, para_prior,
                         theta_mean, theta_sd, theta_intcpt_lgst1, theta_shape, theta_inverse_scale,
-                        alphaT_mean, alphaT_sd, alphaT_shape, alphaT_inverse_scale){
+                        alphaT_mean, alphaT_sd, alphaT_shape, alphaT_inverse_scale,
+                        seed=NULL, seed_rand=NULL, seed_max=NULL){
   currN <- nrow(Dat)
-
+  
   if (currN == 0){
     if (is.null(K_prob)){
       K_prob <- rep(1/K, K) # equal prob for prior information of toxicity orderings
+      set.seed(seed)
       kStar <- sample(c(1:K), 1)
     } else {
       kStar_candidate <- which(K_prob == max(K_prob))
+      set.seed(seed)
       kStar <- ifelse(length(kStar_candidate) == 1, kStar_candidate, sample(kStar_candidate, 1))
     }
 
@@ -246,7 +260,7 @@ efficacy_est <- function(Dat, AR, I, K, K_prob, efficacy_skeleton, Nphase,
       di <- 1 # allocation to the lowest does for next patient
     } else{
       piE_hat <- efficacy_skeleton_kStar[AR]
-      di <- randomization_phase(piE_hat) # x1=di
+      di <- randomization_phase(piE_hat, seed_rand) # x1=di
     }
 
   } else {
@@ -377,12 +391,11 @@ efficacy_est <- function(Dat, AR, I, K, K_prob, efficacy_skeleton, Nphase,
       } else if (model == "logistic2"){
         piE_hat <- 1/(1 + exp(-alpha_hat[kStar]-exp(theta_hat[kStar])*efficacy_skeleton_AR1))
       }
-
-
+      
       if (currN >= Nphase){
-        di = maximization_phase(piE_hat)
+        di = maximization_phase(piE_hat, seed_m=seed_max)
       } else {
-        di = randomization_phase(piE_hat)
+        di = randomization_phase(piE_hat, seed_r=seed_rand)
       }
     }
   }

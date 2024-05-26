@@ -8,11 +8,12 @@ Maximization phase
 This function is used to perform maximization to select the dose level with maximum efficacy probability for next patient or cohort of patients allocation when the current sample size is greater than or equal to a pre-specified number.
 }
 \usage{
-maximization_phase(pE_est)
+maximization_phase(pE_est, seed_m=NULL)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{pE_est}{A vector of estimated efficacy probability in the acceptable set.}
+  \item{seed_m}{An integer for the seed to generate random numbers used in maximization phase, default is NULL.}
 }
 
 \details{

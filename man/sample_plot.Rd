@@ -35,11 +35,16 @@ Returns a ggplot object.
 }
 
 \examples{
+# load the data stored in the crm12Comb package
+file_path <- system.file("extdata", "examples_results.RData", package = "crm12Comb")
+if (file_path == "") stop("Data file not found")
+load(file_path)
+
 # fix the number of patients for determination of randomization phase, skeleton, 
 # and Association parameter for efficacy and toxicity binary outcome
 # plot the relationship between 
 # "Probability of ODC as target combinations" vs. total average sample size
-sample_plot(dat, outcome = "curr.prob_target", 
+sample_plot(examples_results, outcome = "prob_target", 
   outname = "Probability of ODC as target combinations", 
   N = NULL, nR = 20, Skeleton = 1, corr = 0)
 

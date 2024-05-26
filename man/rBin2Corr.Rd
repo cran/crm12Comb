@@ -7,7 +7,7 @@
 Generate correlated bivariate binary outcomes of toxicity and efficacy for a cohort number of patients.
 }
 \usage{
-rBin2Corr(cohortsize, pT, pE, psi)
+rBin2Corr(cohortsize, pT, pE, psi, seed=NULL)
 }
 
 \arguments{
@@ -15,6 +15,7 @@ rBin2Corr(cohortsize, pT, pE, psi)
   \item{pT}{Toxicity probability.}
   \item{pE}{Efficacy probability.}
   \item{psi}{Association parameter for efficacy and toxicity, where psi=0 means toxicity and efficacy is independent.}
+  \item{seed}{An integer for the seed to generate random numbers, default is NULL.}
 }
 \details{
 The formula for generating correlated binary variables is
@@ -42,5 +43,5 @@ Thall, P. F., & Cook, J. D. (2004). Dose‐finding based on efficacy–toxicity 
 %% ~~objects to See Also as \code{\link{help}}, ~~~
 %}
 \examples{
-rBin2Corr(cohortsize = 1, pT = 0.2, pE = 0.4, psi = 0)
+rBin2Corr(cohortsize = 1, pT = 0.2, pE = 0.4, psi = 0, seed=12)
 }
