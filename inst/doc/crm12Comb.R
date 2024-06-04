@@ -1,5 +1,5 @@
 ## ----setup, eval = FALSE------------------------------------------------------
-#  install.packages("./crm12Comb_0.1.4.tar.gz", repos = NULL, type = "source")
+#  install.packages("./crm12Comb_0.1.5.tar.gz", repos = NULL, type = "source")
 #  library(crm12Comb)
 #  help(package="crm12Comb")
 
@@ -86,11 +86,11 @@ print(paste0("Observed response rate is ", simRes$mean_ORR))
 
 ## ----eval = TRUE, fig.width=10, fig.height=5----------------------------------
 # generate plots of patient enrollment of the first trial
-enroll_patient_plot(simRes$datALL[[1]])
+enroll_patient_plot(simRes$datALL[[3]])
 
 ## ----eval = TRUE, fig.width=8, fig.height=6-----------------------------------
 # generate plots of patient allocations by dose levels of the first trial
-patient_allocation_plot(simRes$datALL[[1]])
+patient_allocation_plot(simRes$datALL[[3]])
 
 ## ----eval = TRUE, fig.width=8, fig.height=6-----------------------------------
 # generate plots of ODC selections among all trials
@@ -228,10 +228,10 @@ load(file_path)
 ## ----eval = TRUE, fig.width=8, fig.height=6-----------------------------------
 sample_plot(examples_results, outcome = "prob_target",
             outname = "Probability of ODC as target combinations",
-            N = NULL, nR = 30, Skeleton = 1, corr = 0)
+            N = 40, nR = NULL, Skeleton = 1, corr = 0)
 
 ## ----eval = TRUE, fig.width=8, fig.height=6-----------------------------------
 sample_plot(examples_results, outcome = "mean_ODC",
             outname = "Proportion of patients allocated to true ODC(s)",
-            N = 60, nR = 30, Skeleton = 1, corr = NULL)
+            N = 60, nR = 30, Skeleton = 2, corr = NULL)
 

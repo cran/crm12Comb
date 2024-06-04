@@ -393,9 +393,9 @@ efficacy_est <- function(Dat, AR, I, K, K_prob, efficacy_skeleton, Nphase,
       }
       
       if (currN >= Nphase){
-        di = maximization_phase(piE_hat, seed_m=seed_max)
+        di = AR[maximization_phase(piE_hat, seed_m=seed_max)]
       } else {
-        di = randomization_phase(piE_hat, seed_r=seed_rand)
+        di = AR[randomization_phase(piE_hat, seed_r=seed_rand)]
       }
     }
   }

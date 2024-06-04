@@ -11,7 +11,7 @@ vignette: >
 
 ### Install and import the $crm12Comb$ package
 ```{r setup, eval = FALSE}
-install.packages("./crm12Comb_0.1.4.tar.gz", repos = NULL, type = "source")
+install.packages("./crm12Comb_0.1.5.tar.gz", repos = NULL, type = "source")
 library(crm12Comb)
 help(package="crm12Comb")
 ```
@@ -135,16 +135,16 @@ print(paste0("Observed response rate is ", simRes$mean_ORR))
 
 After obtaining the simulation results, the data for each patient allocation with toxicity and efficacy outcomes under each trial is stored sequentially in a list named "datALL" in $simRes$. This allows a comprehensive visualization of sequential patient enrollment with toxicity and efficacy outcomes and a summary of patient allocation by dose combinations can be plotted. 
 
-The first plot is for the sequential patient enrollment of the first simulated trial, where the red (green) half dot denoted patient with toxicity (efficacy) outcome.
+The first plot is for the sequential patient enrollment of the third simulated trial, where the red (green) half dot denoted patient with toxicity (efficacy) outcome.
 ```{r, eval = TRUE, fig.width=10, fig.height=5}
 # generate plots of patient enrollment of the first trial
-enroll_patient_plot(simRes$datALL[[1]])
+enroll_patient_plot(simRes$datALL[[3]])
 ```
 
-The second plot is for patient allocations by dose combination of the first simulated trial shown by a histogram.
+The second plot is for patient allocations by dose combination of the third simulated trial shown by a histogram.
 ```{r, eval = TRUE, fig.width=8, fig.height=6}
 # generate plots of patient allocations by dose levels of the first trial
-patient_allocation_plot(simRes$datALL[[1]])
+patient_allocation_plot(simRes$datALL[[3]])
 ```
 
 In addition, the overall optimal dose combination (ODC) selection can be plotted by a histogram among total of $100$ simulations for this example.
@@ -301,18 +301,18 @@ if (file_path == "") stop("Data file not found")
 load(file_path)
 ```
 
-Here are two examples of plotting the result data by fixing three parameters and drawing the relationship between the specific operating characteristic and the non-fixed parameter. The first example showing the relationship between "Probability of ODC as target combinations" versus (1) "Maximum sample size" after fixing (2), (3) and (4).
+Here are two examples of plotting the result data by fixing three parameters and drawing the relationship between the specific operating characteristic and the non-fixed parameter. The first example showing the relationship between "Probability of ODC as target combinations" versus (3) "number of patients for determination of randomization phase" after fixing (1), (2) and (4).
 ```{r, eval = TRUE, fig.width=8, fig.height=6}
 sample_plot(examples_results, outcome = "prob_target",
             outname = "Probability of ODC as target combinations",
-            N = NULL, nR = 30, Skeleton = 1, corr = 0)
+            N = 40, nR = NULL, Skeleton = 1, corr = 0)
 ```
 
 The second example showing the relationship between "Proportion of patients allocated to true ODC(s)" versus (4) "Association parameter for efficacy and toxicity" after fixing (1), (2) and (3).
 ```{r, eval = TRUE, fig.width=8, fig.height=6}
 sample_plot(examples_results, outcome = "mean_ODC",
             outname = "Proportion of patients allocated to true ODC(s)",
-            N = 60, nR = 30, Skeleton = 1, corr = NULL)
+            N = 60, nR = 30, Skeleton = 2, corr = NULL)
 ```
 
 ### References
