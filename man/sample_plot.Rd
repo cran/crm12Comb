@@ -36,9 +36,7 @@ Returns a ggplot object.
 
 \examples{
 # load the data stored in the crm12Comb package
-file_path <- system.file("extdata", "examples_results.RData", package = "crm12Comb")
-if (file_path == "") stop("Data file not found")
-load(file_path)
+data(examples_results, package = "crm12Comb")
 
 # fix the number of patients for determination of randomization phase, skeleton, 
 # and Association parameter for efficacy and toxicity binary outcome

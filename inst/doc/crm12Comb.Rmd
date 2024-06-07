@@ -296,9 +296,7 @@ for (s in 1:length(SC)){
 
 The process above is an example of using one link function "empiric" with normal prior. We also ran other link functions including "tanh" with exponential prior, "one-parameter logistic" with normal and gamma priors. We stored the corresponding results into a data set located at $inst/extdata/example\_results.RData$ in the $crm12Comb$ package.
 ```{r load-data, echo=TRUE, results='hide'}
-file_path <- system.file("extdata", "examples_results.RData", package = "crm12Comb")
-if (file_path == "") stop("Data file not found")
-load(file_path)
+data(examples_results, package = "crm12Comb")
 ```
 
 Here are two examples of plotting the result data by fixing three parameters and drawing the relationship between the specific operating characteristic and the non-fixed parameter. The first example showing the relationship between "Probability of ODC as target combinations" versus (3) "number of patients for determination of randomization phase" after fixing (1), (2) and (4).

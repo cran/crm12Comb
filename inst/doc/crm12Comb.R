@@ -221,9 +221,7 @@ cat(tabl2)
 #  }
 
 ## ----load-data, echo=TRUE, results='hide'-------------------------------------
-file_path <- system.file("extdata", "examples_results.RData", package = "crm12Comb")
-if (file_path == "") stop("Data file not found")
-load(file_path)
+data(examples_results, package = "crm12Comb")
 
 ## ----eval = TRUE, fig.width=8, fig.height=6-----------------------------------
 sample_plot(examples_results, outcome = "prob_target",

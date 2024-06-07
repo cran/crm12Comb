@@ -1,8 +1,9 @@
-28f3ee56d917fa0e1c8b300f949553b9 *DESCRIPTION
+8aa1617482b9e9ca0f5403224cb0f232 *DESCRIPTION
 7b426be1279d6ad1f273bdb3d1ef0716 *NAMESPACE
 6c6cc82e7c169b77e6efdc22099e43fc *R/Bayesian_likelihood.R
 4fc4740242d35b67e511d921b0ee01d9 *R/SIM_phase_I_II.R
 bd62611c737753922e35d65dc5b52ee4 *R/est.R
+41ec62b5b51ba95346e3886127d6a48d *R/examples_results.R
 dff34702071fa9061b205733d611ea18 *R/get_orders.R
 2e5e4c7845fa41ef595d729c5701fd24 *R/plots.R
 c3bd5f33e30fb767906cca4dba4d6577 *R/priorSkeletons.R
@@ -10,10 +11,10 @@ aac9e7fd4672f2622b3da489aebe8fc8 *R/rBin2Corr.R
 26b5c363b5ad1f43dfac9d59affb5ceb *R/sample_plot.R
 ea124a494ad7922985532ad3b308e4d5 *build/partial.rdb
 75a9480f00910394be2c1958d444a1ec *build/vignette.rds
-12110757ffb927d43ead973e7760ee33 *inst/doc/crm12Comb.R
-cc83e1c301a48e1909a6917d63f3838e *inst/doc/crm12Comb.Rmd
-508b71b1663864cee410aca658216c5e *inst/doc/crm12Comb.html
-dc9e5f41cc75f380ba62996b4e7b3d52 *inst/extdata/examples_results.RData
+dc9e5f41cc75f380ba62996b4e7b3d52 *data/examples_results.rda
+9503cfd86db61c509a2ccd95f4764b05 *inst/doc/crm12Comb.R
+84cb54e947ff3299e7e1e468447dd735 *inst/doc/crm12Comb.Rmd
+ec2827d950b1f293dd5386f43068f301 *inst/doc/crm12Comb.html
 340d8f75ab84aae9aa53c9d9c1dbf2b5 *man/ODC_plot.Rd
 e652b90de04702dfda6a9e97203c9a7c *man/SIM_phase_I_II.Rd
 3a05c3ac2a57a1e1dbefe569062dd40b *man/doseComb_to_mat.Rd
@@ -21,6 +22,7 @@ e652b90de04702dfda6a9e97203c9a7c *man/SIM_phase_I_II.Rd
 821926a702f32fdde97981848b946cd7 *man/empiric_GammaPriorLikelihood.Rd
 df8a978a694e398b5ab4e162e1af8556 *man/empiric_NormalPriorLikelihood.Rd
 41a63da7efc8b6cef5cd187cdca6bb3b *man/enroll_patient_plot.Rd
+2570c4b1bd8538920086efb71751bfc4 *man/examples_results.Rd
 dd26f97220b35bce9577529574d038ef *man/get_ordering.Rd
 f551a679aee8d7b89b673c8152ba3c45 *man/logisticOnePara_GammaPriorLikelihood.Rd
 25cc33ccb9c687b8c8726e40de24b9f3 *man/logisticOnePara_NormalPriorLikelihood.Rd
@@ -31,7 +33,7 @@ f551a679aee8d7b89b673c8152ba3c45 *man/logisticOnePara_GammaPriorLikelihood.Rd
 da1f9c63d911e051d8f181788b9bd9d0 *man/priorSkeletons.Rd
 684abdca2380b39cfd519534ee25b3a4 *man/rBin2Corr.Rd
 778a87c2b3fd09ab3927f0a63a418e55 *man/randomization_phase.Rd
-779e682fffbce8691e1bcfa7b815d94e *man/sample_plot.Rd
+b8f82dbce413b74182e7798dca6dfd7d *man/sample_plot.Rd
 607ab36be67e3bb71355d3ef429eef44 *man/tanh_ExpPriorLikelihood.Rd
 a3af96fb2b076eb92f61e012c620fa54 *man/toxicity_est.Rd
-cc83e1c301a48e1909a6917d63f3838e *vignettes/crm12Comb.Rmd
+84cb54e947ff3299e7e1e468447dd735 *vignettes/crm12Comb.Rmd
