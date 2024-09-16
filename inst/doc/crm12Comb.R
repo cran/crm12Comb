@@ -1,5 +1,5 @@
 ## ----setup, eval = FALSE------------------------------------------------------
-#  install.packages("./crm12Comb_0.1.5.tar.gz", repos = NULL, type = "source")
+#  install.packages("./crm12Comb_0.1.7.tar.gz", repos = NULL, type = "source")
 #  library(crm12Comb)
 #  help(package="crm12Comb")
 
@@ -72,7 +72,7 @@ simRes <- SIM_phase_I_II(nsim=100, Nmax=40, DoseComb=scenario, input_doseComb_fo
                          input_model="empiric", input_para_prior="normal",
                          input_beta_mean=0, input_beta_sd=sqrt(1.34),
                          input_theta_mean=0, input_theta_sd=sqrt(1.34),
-                         random_seed=23)
+                         random_seed=123)
 
 print(paste0("Probability of recommending safe/ineffective combinations as ODC is ", simRes$prob_safe))
 print(paste0("Probability of recommending target combinations as ODC is ", simRes$prob_target))

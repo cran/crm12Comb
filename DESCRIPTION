@@ -1,7 +1,7 @@
 Package: crm12Comb
 Type: Package
 Title: Phase I/II CRM Based Drug Combination Design
-Version: 0.1.6
+Version: 0.1.7
 Authors@R: c(
     person("Junying", "Wang", email = "junying.wang@stonybrook.edu", role = c("cre", "aut")),
     person("Song", "Wu", email = "song.wu@stonyrbook.edu", role = "aut"),
@@ -17,9 +17,9 @@ Imports: dplyr, ggplot2, ggforce
 Suggests: knitr, rmarkdown
 Depends: R (>= 3.5.0)
 NeedsCompilation: no
-Packaged: 2024-06-06 20:18:59 UTC; junyingwang
+Packaged: 2024-09-16 14:17:49 UTC; junyingwang
 Author: Junying Wang [cre, aut],
   Song Wu [aut],
   Jie Yang [aut]
 Repository: CRAN
-Date/Publication: 2024-06-07 12:20:11 UTC
+Date/Publication: 2024-09-16 14:30:01 UTC

@@ -1,5 +1,5 @@
 #' Title: Bayesian likelihood inference
-#' @references R package dfcrm
+#' @references: R package dfcrm
 
 #' Hyperbolic tangent model with exponential prior
 #' @param beta parameter.
@@ -12,7 +12,7 @@
 tanh_ExpPriorLikelihood <- function(beta, beta_mean, x, y){
   l <- beta_mean*exp(-beta_mean*beta)
   for (i in 1:length(x)){
-    l <- l * (((tanh(x[i]+1)/2)^beta)^y[i])*((1-((tanh(x[i]+1)/2)^beta))^(1-y[i]))
+    l <- l * ((((tanh(x[i])+1)/2)^beta)^y[i])*((1-(((tanh(x[i])+1)/2)^beta))^(1-y[i]))
   }
   return(l)
 }
@@ -20,7 +20,7 @@ tanh_ExpPriorLikelihood <- function(beta, beta_mean, x, y){
 tanh_ExpPriorLikelihood_est <- function(beta, beta_mean, x, y){
   l <- beta * beta_mean*exp(-beta_mean*beta)
   for (i in 1:length(x)){
-    l <- l * (((tanh(x[i]+1)/2)^beta)^y[i])*((1-((tanh(x[i]+1)/2)^beta))^(1-y[i]))
+    l <- l * ((((tanh(x[i])+1)/2)^beta)^y[i])*((1-(((tanh(x[i])+1)/2)^beta))^(1-y[i]))
   }
   return(l)
 }

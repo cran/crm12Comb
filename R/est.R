@@ -193,7 +193,7 @@ toxicity_est <- function(Dat, I, M, M_prob, DLT_skeleton, DLT_thresh,
     }
 
     if (model == "tanh"){
-      piT_hat <- ((tanh(DLT_skeleton_mStar1+1)/2)^beta_hat[mStar])
+      piT_hat <- (((tanh(DLT_skeleton_mStar1)+1)/2)^beta_hat[mStar])
     } else if (model == "empiric"){
       piT_hat <- DLT_skeleton_mStar1^(exp(beta_hat[mStar]))
     } else if (model == "logistic"){
@@ -260,7 +260,7 @@ efficacy_est <- function(Dat, AR, I, K, K_prob, efficacy_skeleton, Nphase,
       di <- 1 # allocation to the lowest does for next patient
     } else{
       piE_hat <- efficacy_skeleton_kStar[AR]
-      di <- randomization_phase(piE_hat, seed_rand) # x1=di
+      di <- AR[randomization_phase(piE_hat, seed_rand)] # x1=di
     }
 
   } else {
@@ -383,7 +383,7 @@ efficacy_est <- function(Dat, AR, I, K, K_prob, efficacy_skeleton, Nphase,
 
 
       if (model == "tanh"){
-        piE_hat <- ((tanh(efficacy_skeleton_AR1+1)/2)^theta_hat[kStar])
+        piE_hat <- (((tanh(efficacy_skeleton_AR1)+1)/2)^theta_hat[kStar])
       } else if (model == "empiric"){
         piE_hat <- efficacy_skeleton_AR1^(exp(theta_hat[kStar]))
       } else if (model == "logistic"){

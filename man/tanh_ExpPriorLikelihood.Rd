@@ -22,6 +22,6 @@ l -> likelihood function
 Title: Bayesian likelihood inference
 }
 \references{
-R package dfcrm
+: R package dfcrm
 Hyperbolic tangent model with exponential prior
 }

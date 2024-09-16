@@ -16,7 +16,7 @@
 #'
 #' @references
 #' Wages NA, Conaway MR. Specifications of a continual reassessment method design for phase I trials of combined drugs. Pharmaceutical statistics. 2013 Jul;12(4):217-24.
-#' \url{https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3771354/}
+#' \doi{10.1002/pst.1575}
 
 doseComb_to_mat <- function(doseComb, type){
   if (type == "comb"){
