@@ -1,8 +1,8 @@
-1b860394993c6647ae6620664eda10f2 *DESCRIPTION
+48e345e871cae364fc3a45b1cb1578e8 *DESCRIPTION
 7b426be1279d6ad1f273bdb3d1ef0716 *NAMESPACE
-d76cb01773e5a317549575f1249fb815 *R/Bayesian_likelihood.R
+d39fdb544002e50b191df4c201ccad32 *R/Bayesian_likelihood.R
 4fc4740242d35b67e511d921b0ee01d9 *R/SIM_phase_I_II.R
-8b20b5d391d245d2f2b6232ad010d286 *R/est.R
+3009fed8513c666264a37bde92468e80 *R/est.R
 41ec62b5b51ba95346e3886127d6a48d *R/examples_results.R
 357dbc8048752bcd418e906cfe446bc6 *R/get_orders.R
 2e5e4c7845fa41ef595d729c5701fd24 *R/plots.R
@@ -11,10 +11,10 @@ aac9e7fd4672f2622b3da489aebe8fc8 *R/rBin2Corr.R
 26b5c363b5ad1f43dfac9d59affb5ceb *R/sample_plot.R
 f61db891eb928123aba4412ca322f508 *build/partial.rdb
 eec37eb66d90eda16dc1f6bae9fac419 *build/vignette.rds
-7641c1c8c150592de39da6b1a4871074 *data/examples_results.RData
-1b9d00e0be918eee438075b7a09bee2f *inst/doc/crm12Comb.R
-fe79249bcf67086509e9e0219137ec95 *inst/doc/crm12Comb.Rmd
-bdc2ed044cb7c74af3f987f2e6fcc616 *inst/doc/crm12Comb.html
+169a16a864d1bbf96c1d0ce50abc802f *data/examples_results.RData
+88a5132746140ded617b4d5a945f3119 *inst/doc/crm12Comb.R
+03352d6e457571566cd42864191f6b35 *inst/doc/crm12Comb.Rmd
+bd87d2c5bd5558c09bd9b42716338752 *inst/doc/crm12Comb.html
 340d8f75ab84aae9aa53c9d9c1dbf2b5 *man/ODC_plot.Rd
 e652b90de04702dfda6a9e97203c9a7c *man/SIM_phase_I_II.Rd
 41dab4cc45d4fe4e5bde91c551697675 *man/doseComb_to_mat.Rd
@@ -36,4 +36,4 @@ da1f9c63d911e051d8f181788b9bd9d0 *man/priorSkeletons.Rd
 b8f82dbce413b74182e7798dca6dfd7d *man/sample_plot.Rd
 b54e5c0fa0b70fa68bdb71bd6be907b8 *man/tanh_ExpPriorLikelihood.Rd
 a3af96fb2b076eb92f61e012c620fa54 *man/toxicity_est.Rd
-fe79249bcf67086509e9e0219137ec95 *vignettes/crm12Comb.Rmd
+03352d6e457571566cd42864191f6b35 *vignettes/crm12Comb.Rmd

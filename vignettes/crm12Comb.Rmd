@@ -11,7 +11,7 @@ vignette: >
 
 ### Install and import the $crm12Comb$ package
 ```{r setup, eval = FALSE}
-install.packages("./crm12Comb_0.1.7.tar.gz", repos = NULL, type = "source")
+install.packages("./crm12Comb_0.1.8.tar.gz", repos = NULL, type = "source")
 library(crm12Comb)
 help(package="crm12Comb")
 ```
@@ -41,7 +41,9 @@ $$\pi_T(d_i)=P[Y_j=1|d_i]\approx F_m(d_i,\beta),\; m=1,\ldots,M$$
 
  - **Empiric model**
 $$F_m(d_i,\beta) = d_i^{\exp(\beta)},$$
-with normal or gamma prior on $\beta$.
+with normal on $\beta$ or 
+$$F_m(d_i,\beta) = d_i^{\beta},$$
+with gamma prior on $\beta$.
 
  - **Hyperbolic tangent model**
 $$F_m(d_i,\beta) = \left(\frac{\tanh(d_i)+1}{2} \right)^{\beta},$$
@@ -49,11 +51,19 @@ with exponential prior on $\beta$.
 
  - **One-parameter logistic model**
 $$F_m(d_i,\beta) = \frac{1}{1+\exp(-a_0-\exp(\beta)d_i)},$$
-with fixed $a_0$ and normal or gamma prior on $\beta$.
+with fixed $a_0$ and normal prior on $\beta$ or 
+$$F_m(d_i,\beta) = \frac{1}{1+\exp(-a_0-\beta d_i)},$$
+with fixed $a_0$ and gamma prior on $\beta$.
 
 - **Two-parameter logistic model**
 $$F_m(d_i,\beta) = \frac{1}{1+\exp(-\alpha-\exp(\beta)d_i)},$$
-with normal or gamma prior on $\alpha$ and $\beta$.
+with normal prior on $\alpha$ and $\beta$ or
+$$F_m(d_i,\beta) = \frac{1}{1+\exp(-\alpha-\beta d_i)},$$
+with gamma prior on $\alpha$ and $\beta$.
+
+Similar link function and prior distributions can be derived for efficacy probabilities.
+
+Exponential form was implemented on parameter $\beta$ under the normal prior distribution to reveal the monotonic nature of both dose-toxicity curve and dose-efficacy curve, while no exponential form was added for gamma prior distribution because all the values are positive for gamma distribution.
 
 ### Using crm12Comb
 We provided two parts of examples in this section, one is for how to implement the functions in crm12Comb package and the other one is how to obtain simulation results given a list of input values.

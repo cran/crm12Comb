@@ -195,11 +195,23 @@ toxicity_est <- function(Dat, I, M, M_prob, DLT_skeleton, DLT_thresh,
     if (model == "tanh"){
       piT_hat <- (((tanh(DLT_skeleton_mStar1)+1)/2)^beta_hat[mStar])
     } else if (model == "empiric"){
-      piT_hat <- DLT_skeleton_mStar1^(exp(beta_hat[mStar]))
+      if (para_prior == "normal"){
+        piT_hat <- DLT_skeleton_mStar1^(exp(beta_hat[mStar]))
+      } else if (para_prior == "gamma"){
+        piT_hat <- DLT_skeleton_mStar1^(beta_hat[mStar])
+      }
     } else if (model == "logistic"){
-      piT_hat <- 1/(1 + exp(-intcpt_lgst1-exp(beta_hat[mStar])*DLT_skeleton_mStar1))
+      if (para_prior == "normal"){
+        piT_hat <- 1/(1 + exp(-intcpt_lgst1-exp(beta_hat[mStar])*DLT_skeleton_mStar1))
+      } else if (para_prior == "gamma"){
+        piT_hat <- 1/(1 + exp(-intcpt_lgst1-beta_hat[mStar]*DLT_skeleton_mStar1))
+      }
     } else if (model == "logistic2"){
-      piT_hat <- 1/(1 + exp(-alpha_hat[mStar]-exp(beta_hat[mStar])*DLT_skeleton_mStar1))
+      if (para_prior == "normal"){
+        piT_hat <- 1/(1 + exp(-alpha_hat[mStar]-exp(beta_hat[mStar])*DLT_skeleton_mStar1))
+      } else if (para_prior == "gamma"){
+        piT_hat <- 1/(1 + exp(-alpha_hat[mStar]-beta_hat[mStar]*DLT_skeleton_mStar1))
+      }
     }
 
     AR <- which(piT_hat <= DLT_thresh)
@@ -385,11 +397,23 @@ efficacy_est <- function(Dat, AR, I, K, K_prob, efficacy_skeleton, Nphase,
       if (model == "tanh"){
         piE_hat <- (((tanh(efficacy_skeleton_AR1)+1)/2)^theta_hat[kStar])
       } else if (model == "empiric"){
-        piE_hat <- efficacy_skeleton_AR1^(exp(theta_hat[kStar]))
+        if (para_prior == "normal"){
+          piE_hat <- efficacy_skeleton_AR1^(exp(theta_hat[kStar]))
+        } else if (para_prior == "gamma"){
+          piE_hat <- efficacy_skeleton_AR1^(theta_hat[kStar])
+        }
       } else if (model == "logistic"){
-        piE_hat <- 1/(1 + exp(-theta_intcpt_lgst1-exp(theta_hat[kStar])*efficacy_skeleton_AR1))
+        if (para_prior == "normal"){
+          piE_hat <- 1/(1 + exp(-theta_intcpt_lgst1-exp(theta_hat[kStar])*efficacy_skeleton_AR1))
+        } else if (para_prior == "gamma"){
+          piE_hat <- 1/(1 + exp(-theta_intcpt_lgst1-theta_hat[kStar]*efficacy_skeleton_AR1))
+        }
       } else if (model == "logistic2"){
-        piE_hat <- 1/(1 + exp(-alpha_hat[kStar]-exp(theta_hat[kStar])*efficacy_skeleton_AR1))
+        if (para_prior == "normal"){
+          piE_hat <- 1/(1 + exp(-alpha_hat[kStar]-exp(theta_hat[kStar])*efficacy_skeleton_AR1))
+        } else if (para_prior == "gamma"){
+          piE_hat <- 1/(1 + exp(-alpha_hat[kStar]-theta_hat[kStar]*efficacy_skeleton_AR1))
+        }
       }
       
       if (currN >= Nphase){

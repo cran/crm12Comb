@@ -63,7 +63,7 @@ empiric_NormalPriorLikelihood_est <- function(beta, beta_mean, beta_sd, x, y){
 empiric_GammaPriorLikelihood <- function(beta, beta_shape, beta_inverse_scale, x, y){
   l <- ((beta^(beta_shape-1))*exp(-beta_inverse_scale*beta)*(beta_inverse_scale^beta_shape))/gamma(beta_shape)
   for (i in 1:length(x)){
-    l <- l * ((x[i]^(exp(beta)))^y[i])*((1-x[i]^(exp(beta)))^(1-y[i]))
+    l <- l * ((x[i]^(beta))^y[i])*((1-x[i]^(beta))^(1-y[i]))
   }
   return(l)
 }
@@ -71,7 +71,7 @@ empiric_GammaPriorLikelihood <- function(beta, beta_shape, beta_inverse_scale, x
 empiric_GammaPriorLikelihood_est <- function(beta, beta_shape, beta_inverse_scale, x, y){
   l <- beta * ((beta^(beta_shape-1))*exp(-beta_inverse_scale*beta)*(beta_inverse_scale^beta_shape))/gamma(beta_shape)
   for (i in 1:length(x)){
-    l <- l * ((x[i]^(exp(beta)))^y[i])*((1-x[i]^(exp(beta)))^(1-y[i]))
+    l <- l * ((x[i]^(beta))^y[i])*((1-x[i]^(beta))^(1-y[i]))
   }
   return(l)
 }
@@ -116,7 +116,7 @@ logisticOnePara_NormalPriorLikelihood_est <- function(alpha1, alpha1_mean, alpha
 logisticOnePara_GammaPriorLikelihood <- function(alpha1, alpha1_shape, alpha1_inverse_scale, intcpt, x, y){
   l <- ((alpha1^(alpha1_shape-1))*exp(-alpha1_inverse_scale*alpha1)*(alpha1_inverse_scale^alpha1_shape))/gamma(alpha1_shape)
   for (i in 1:length(x)){
-    l <- l * ((1/(1 + exp(-intcpt-exp(alpha1)*x[i])))^y[i])*((1-1/(1 + exp(-intcpt-exp(alpha1)*x[i])))^(1-y[i]))
+    l <- l * ((1/(1 + exp(-intcpt-alpha1*x[i])))^y[i])*((1-1/(1 + exp(-intcpt-alpha1*x[i])))^(1-y[i]))
   }
   return(l)
 }
@@ -124,7 +124,7 @@ logisticOnePara_GammaPriorLikelihood <- function(alpha1, alpha1_shape, alpha1_in
 logisticOnePara_GammaPriorLikelihood_est <- function(alpha1, alpha1_shape, alpha1_inverse_scale, intcpt, x, y){
   l <- alpha1 * ((alpha1^(alpha1_shape-1))*exp(-alpha1_inverse_scale*alpha1)*(alpha1_inverse_scale^alpha1_shape))/gamma(alpha1_shape)
   for (i in 1:length(x)){
-    l <- l * ((1/(1 + exp(-intcpt-exp(alpha1)*x[i])))^y[i])*((1-1/(1 + exp(-intcpt-exp(alpha1)*x[i])))^(1-y[i]))
+    l <- l * ((1/(1 + exp(-intcpt-alpha1*x[i])))^y[i])*((1-1/(1 + exp(-intcpt-alpha1*x[i])))^(1-y[i]))
   }
   return(l)
 }
@@ -165,7 +165,7 @@ logisticTwoPara_NormalPriorLikelihood <- function(alpha0, alpha1, alpha0_mean, a
 logisticTwoPara_GammaPriorLikelihood <- function(alpha0, alpha1, alpha0_shape, alpha0_inverse_scale, alpha1_shape, alpha1_inverse_scale, x, y){
   l <- (((alpha0^(alpha0_shape-1))*exp(-alpha0_inverse_scale*alpha0)*(alpha0_inverse_scale^alpha0_shape))/gamma(alpha0_shape)) * (((alpha1^(alpha1_shape-1))*exp(-alpha1_inverse_scale*alpha1)*(alpha1_inverse_scale^alpha1_shape))/gamma(alpha1_shape))
   for (i in 1:length(x)){
-    l <- l * ((1/(1 + exp(-alpha0-exp(alpha1)*x[i])))^y[i])*((1-1/(1 + exp(-alpha0-exp(alpha1)*x[i])))^(1-y[i]))
+    l <- l * ((1/(1 + exp(-alpha0-alpha1*x[i])))^y[i])*((1-1/(1 + exp(-alpha0-alpha1*x[i])))^(1-y[i]))
   }
   return(l)
 }
