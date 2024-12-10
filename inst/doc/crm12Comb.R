@@ -1,5 +1,5 @@
 ## ----setup, eval = FALSE------------------------------------------------------
-#  install.packages("./crm12Comb_0.1.8.tar.gz", repos = NULL, type = "source")
+#  install.packages("./crm12Comb_0.1.9.tar.gz", repos = NULL, type = "source")
 #  library(crm12Comb)
 #  help(package="crm12Comb")
 

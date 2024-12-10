@@ -45,12 +45,12 @@ priorSkeletons <- function (updelta, target, npos, ndose, model = "empiric", pri
     }
     for (i in npos:2) {
       if (npos > 1) {
-        dosescaled[i - 1] <- exp((log(target - updelta) * log(dosescaled[i])) / log(target + updelta))
+        dosescaled[i - 1] <- -1/2 * log((1+exp(-2*dosescaled[i]))^(log(target - updelta)/log(target + updelta))-1)
       }
     }
     for (i in npos:(ndose - 1)) {
       if (npos < ndose) {
-        dosescaled[i + 1] <- exp((log(target + updelta) * log(dosescaled[i])) / log(target - updelta))
+        dosescaled[i + 1] <- -1/2 * log((1+exp(-2*dosescaled[i]))^(log(target + updelta)/log(target - updelta))-1)
       }
     }
     if (prior == "exponential"){
