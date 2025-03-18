@@ -1,5 +1,5 @@
 ## ----setup, eval = FALSE------------------------------------------------------
-#  install.packages("./crm12Comb_0.1.9.tar.gz", repos = NULL, type = "source")
+#  install.packages("./crm12Comb_0.1.10.tar.gz", repos = NULL, type = "source")
 #  library(crm12Comb)
 #  help(package="crm12Comb")
 
@@ -95,6 +95,44 @@ patient_allocation_plot(simRes$datALL[[3]])
 ## ----eval = TRUE, fig.width=8, fig.height=6-----------------------------------
 # generate plots of ODC selections among all trials
 ODC_plot(simRes)
+
+## ----eval = TRUE--------------------------------------------------------------
+set.seed(123)
+currDat <- data.frame(sample(1:6, 6, replace=TRUE), rbinom(6, 1, 0.2), rbinom(6, 1, 0.5))
+names(currDat) <- c("DoseLevel", "DLT", "ORR")
+currDat
+
+## ----eval = TRUE--------------------------------------------------------------
+orderings <- get_ordering(doseComb_forMat=c(4,4), type_forMat="matrix")
+orderings
+
+## ----eval = TRUE--------------------------------------------------------------
+DLT <- lapply(orderings, function(or){DLT_skeleton[or]})
+ORR <- lapply(orderings, function(or){Efficacy_skeleton[or]})
+lapply(DLT, function (x) round(x, 3))
+
+lapply(ORR, function (x) round(x, 3))
+
+## ----eval = TRUE--------------------------------------------------------------
+tox <- toxicity_est(Dat=currDat, I=16, M=6, 
+    M_prob=rep(1/6,6), DLT_skeleton=DLT, DLT_thresh=0.3,
+    model="empiric", para_prior="normal", beta_mean=0, 
+    beta_sd=1, intcpt_lgst1=NULL, beta_shape=NULL, 
+    beta_inverse_scale=NULL, alpha_mean=NULL, 
+    alpha_sd=NULL, alpha_shape=NULL, 
+    alpha_inverse_scale=NULL, seed=23)
+tox
+
+## ----eval = TRUE--------------------------------------------------------------
+eff <- efficacy_est(Dat=currDat, AR=tox$AR, I=16, K=6, 
+    K_prob=rep(1/6,6), efficacy_skeleton=ORR, Nphas=20, 
+    model="empiric", para_prior="normal", theta_mean=0, 
+    theta_sd=1, theta_intcpt_lgst1=NULL, theta_shape=NULL, 
+    theta_inverse_scale=NULL, alphaT_mean=NULL, 
+    alphaT_sd=NULL, alphaT_shape=NULL, 
+    alphaT_inverse_scale=NULL, seed=23, seed_rand=23, 
+    seed_max=23)
+eff
 
 ## ----table2, echo=FALSE, message=FALSE, warnings=FALSE, results='asis'--------
 tabl2 <- "

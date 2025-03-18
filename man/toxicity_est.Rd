@@ -39,6 +39,8 @@ The toxicity estimation is based on Bayesian framework by calculating the likeli
 \value{
 A list is returned containing the following components:
 
+\item{mStar}{An integer for toxicity ordering with maximum posterior density given the current accumulated data.}
+\item{piT_hat}{A vector for estimated toxicity probabilities given the current accumulated data.}
 \item{AR}{A vector for dose levels belonging to acceptable set (estimated DLT rate less than pre-specified DLT threshold).}
 \item{M_prob}{A vector for posterier density of toxicity orderings and will be used as prior information for next enrolled patient or cohort of patients.}
 }

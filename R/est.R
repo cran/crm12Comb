@@ -77,6 +77,7 @@ toxicity_est <- function(Dat, I, M, M_prob, DLT_skeleton, DLT_thresh,
 
     AR <- which(DLT_skeleton_mStar <= DLT_thresh) # acceptable set {doses}
     M_prob <- M_prob
+    piT_hat <- NULL
 
   } else {
     tau_m <- M_prob
@@ -216,7 +217,7 @@ toxicity_est <- function(Dat, I, M, M_prob, DLT_skeleton, DLT_thresh,
 
     AR <- which(piT_hat <= DLT_thresh)
   }
-  return(list(AR=AR, M_prob=M_prob))
+  return(list(mStar=mStar, piT_hat=piT_hat, AR=AR, M_prob=M_prob))
 }
 
 
@@ -365,7 +366,8 @@ efficacy_est <- function(Dat, AR, I, K, K_prob, efficacy_skeleton, Nphase,
     kStar <- ifelse(length(kStar_candidate) == 1, kStar_candidate, sample(kStar_candidate, 1))
 
     if (length(AR) == 0){
-      di = 1
+      di <- 1
+      piE_hat <- NULL
     } else {
       efficacy_skeleton_AR <- efficacy_skeleton[[kStar]][AR]
       # get scaled skeletons
@@ -424,5 +426,5 @@ efficacy_est <- function(Dat, AR, I, K, K_prob, efficacy_skeleton, Nphase,
     }
   }
 
-  return(list(di=di, K_prob=K_prob))
+  return(list(kStar=kStar, piE_hat=piE_hat, di=di, K_prob=K_prob))
 }
