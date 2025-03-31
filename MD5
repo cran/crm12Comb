@@ -1,8 +1,8 @@
-b28eb4d1c0f3b58b1ec99039095f6d34 *DESCRIPTION
+ac29cbd5c0eb63253582ba806041e493 *DESCRIPTION
 7b426be1279d6ad1f273bdb3d1ef0716 *NAMESPACE
 d39fdb544002e50b191df4c201ccad32 *R/Bayesian_likelihood.R
-4fc4740242d35b67e511d921b0ee01d9 *R/SIM_phase_I_II.R
-590555200c001e78b60f2ed840fe9b55 *R/est.R
+27b520e20657597cf5d908f995db905e *R/SIM_phase_I_II.R
+5daadb26ea3aff3d0371570ef004a644 *R/est.R
 41ec62b5b51ba95346e3886127d6a48d *R/examples_results.R
 357dbc8048752bcd418e906cfe446bc6 *R/get_orders.R
 2e5e4c7845fa41ef595d729c5701fd24 *R/plots.R
@@ -11,14 +11,14 @@ aac9e7fd4672f2622b3da489aebe8fc8 *R/rBin2Corr.R
 26b5c363b5ad1f43dfac9d59affb5ceb *R/sample_plot.R
 f61db891eb928123aba4412ca322f508 *build/partial.rdb
 eec37eb66d90eda16dc1f6bae9fac419 *build/vignette.rds
-72a7e23318aa0b5a623e5ed800d2abf4 *data/examples_results.RData
-ae0ac1f3afeb864d3cee31af6622d1b9 *inst/doc/crm12Comb.R
-7246f79091b731f9d9eb5d3c68179ef5 *inst/doc/crm12Comb.Rmd
-308130ff8a01812cb9bad0569253f3d1 *inst/doc/crm12Comb.html
+ea171433631446adfc8c90a2d9853811 *data/examples_results.RData
+48e322d8e71b5c3a1a9cd170061084c8 *inst/doc/crm12Comb.R
+b3d22180054caa8cddb11f34980c6028 *inst/doc/crm12Comb.Rmd
+2d002a5497ef797fa2251611050b0c39 *inst/doc/crm12Comb.html
 340d8f75ab84aae9aa53c9d9c1dbf2b5 *man/ODC_plot.Rd
 e652b90de04702dfda6a9e97203c9a7c *man/SIM_phase_I_II.Rd
 41dab4cc45d4fe4e5bde91c551697675 *man/doseComb_to_mat.Rd
-ff22068d5c6134a63bd5fc9a5946333e *man/efficacy_est.Rd
+cd7657a7714c7a46cf017e45ce39ce83 *man/efficacy_est.Rd
 821926a702f32fdde97981848b946cd7 *man/empiric_GammaPriorLikelihood.Rd
 df8a978a694e398b5ab4e162e1af8556 *man/empiric_NormalPriorLikelihood.Rd
 41a63da7efc8b6cef5cd187cdca6bb3b *man/enroll_patient_plot.Rd
@@ -36,4 +36,4 @@ da1f9c63d911e051d8f181788b9bd9d0 *man/priorSkeletons.Rd
 b8f82dbce413b74182e7798dca6dfd7d *man/sample_plot.Rd
 b54e5c0fa0b70fa68bdb71bd6be907b8 *man/tanh_ExpPriorLikelihood.Rd
 53a79b6fc0067f84e013636d76d877c6 *man/toxicity_est.Rd
-7246f79091b731f9d9eb5d3c68179ef5 *vignettes/crm12Comb.Rmd
+b3d22180054caa8cddb11f34980c6028 *vignettes/crm12Comb.Rmd

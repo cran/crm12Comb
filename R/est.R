@@ -271,9 +271,12 @@ efficacy_est <- function(Dat, AR, I, K, K_prob, efficacy_skeleton, Nphase,
     # 1st patient allocation ratio
     if (length(AR)==0){
       di <- 1 # allocation to the lowest does for next patient
+      piE_hat <- NULL
+      piE_hat_AR <- NULL
     } else{
-      piE_hat <- efficacy_skeleton_kStar[AR]
-      di <- AR[randomization_phase(piE_hat, seed_rand)] # x1=di
+      piE_hat <- efficacy_skeleton_kStar
+      piE_hat_AR <- efficacy_skeleton_kStar[AR]
+      di <- AR[randomization_phase(piE_hat_AR, seed_rand)] # x1=di
     }
 
   } else {
@@ -368,8 +371,9 @@ efficacy_est <- function(Dat, AR, I, K, K_prob, efficacy_skeleton, Nphase,
     if (length(AR) == 0){
       di <- 1
       piE_hat <- NULL
+      piE_hat_AR <- NULL
     } else {
-      efficacy_skeleton_AR <- efficacy_skeleton[[kStar]][AR]
+      efficacy_skeleton_AR <- efficacy_skeleton[[kStar]]
       # get scaled skeletons
       if (model == "tanh"){
         if (para_prior == "exponential"){
@@ -418,13 +422,15 @@ efficacy_est <- function(Dat, AR, I, K, K_prob, efficacy_skeleton, Nphase,
         }
       }
       
+      piE_hat_AR <- piE_hat[AR]
+      
       if (currN >= Nphase){
-        di = AR[maximization_phase(piE_hat, seed_m=seed_max)]
+        di = AR[maximization_phase(piE_hat_AR, seed_m=seed_max)]
       } else {
-        di = AR[randomization_phase(piE_hat, seed_r=seed_rand)]
+        di = AR[randomization_phase(piE_hat_AR, seed_r=seed_rand)]
       }
     }
   }
 
-  return(list(kStar=kStar, piE_hat=piE_hat, di=di, K_prob=K_prob))
+  return(list(kStar=kStar, piE_hat=piE_hat, piE_hat_AR=piE_hat_AR, di=di, K_prob=K_prob))
 }

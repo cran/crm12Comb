@@ -1,5 +1,5 @@
 ## ----setup, eval = FALSE------------------------------------------------------
-#  install.packages("./crm12Comb_0.1.10.tar.gz", repos = NULL, type = "source")
+#  install.packages("./crm12Comb_0.1.11.tar.gz", repos = NULL, type = "source")
 #  library(crm12Comb)
 #  help(package="crm12Comb")
 
@@ -107,8 +107,8 @@ orderings <- get_ordering(doseComb_forMat=c(4,4), type_forMat="matrix")
 orderings
 
 ## ----eval = TRUE--------------------------------------------------------------
-DLT <- lapply(orderings, function(or){DLT_skeleton[or]})
-ORR <- lapply(orderings, function(or){Efficacy_skeleton[or]})
+DLT <- lapply(orderings, function(or){DLT_skeleton[order(or)]})
+ORR <- lapply(orderings, function(or){Efficacy_skeleton[order(or)]})
 lapply(DLT, function (x) round(x, 3))
 
 lapply(ORR, function (x) round(x, 3))

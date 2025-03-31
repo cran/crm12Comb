@@ -64,8 +64,8 @@ SIM_phase_I_II <- function(nsim, Nmax, DoseComb, input_doseComb_forMat, input_ty
   ndoses <- length(DoseComb)
 
   orderings <- get_ordering(doseComb_forMat=input_doseComb_forMat, type_forMat=input_type_forMat)
-  DLT_orderings <- lapply(orderings, function(or){input_DLT_skeleton[or]})
-  ORR_orderings <- lapply(orderings, function(or){input_efficacy_skeleton[or]})
+  DLT_orderings <- lapply(orderings, function(or){input_DLT_skeleton[order(or)]})
+  ORR_orderings <- lapply(orderings, function(or){input_efficacy_skeleton[order(or)]})
   
   nM <- length(DLT_orderings)
   nK <- length(ORR_orderings)

@@ -44,7 +44,8 @@ The efficacy estimation is based on Bayesian framework by calculating the likeli
 A list is returned containing the following components:
 
 \item{kStar}{An integer for efficacy ordering with maximum posterior density given the current accumulated data.}
-\item{piE_hat}{A vector for estimated efficacy probabilities from acceptable set given the current accumulated data.}
+\item{piE_hat}{A vector for estimated efficacy probabilities given the current accumulated data.}
+\item{piE_hat_AR}{A vector for estimated efficacy probabilities belonged to the acceptable set given the current accumulated data.}
 \item{di}{Number of dose level for next enrolled patient or cohort of patients}
 \item{K_prob}{A vector for posterier density of efficacy orderings and will be used as prior information for next enrolled patient or cohort of patients.}
 }
