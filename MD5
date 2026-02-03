@@ -1,4 +1,4 @@
-ac29cbd5c0eb63253582ba806041e493 *DESCRIPTION
+66f7b24055cdd08e5f842b0bbf91e68f *DESCRIPTION
 7b426be1279d6ad1f273bdb3d1ef0716 *NAMESPACE
 d39fdb544002e50b191df4c201ccad32 *R/Bayesian_likelihood.R
 27b520e20657597cf5d908f995db905e *R/SIM_phase_I_II.R
@@ -12,9 +12,10 @@ aac9e7fd4672f2622b3da489aebe8fc8 *R/rBin2Corr.R
 f61db891eb928123aba4412ca322f508 *build/partial.rdb
 eec37eb66d90eda16dc1f6bae9fac419 *build/vignette.rds
 ea171433631446adfc8c90a2d9853811 *data/examples_results.RData
+658bf480e94179d036711038ea348f9e *inst/CITATION
 48e322d8e71b5c3a1a9cd170061084c8 *inst/doc/crm12Comb.R
 b3d22180054caa8cddb11f34980c6028 *inst/doc/crm12Comb.Rmd
-2d002a5497ef797fa2251611050b0c39 *inst/doc/crm12Comb.html
+76e2137b3b3b74e19f90d1ab9ecf4338 *inst/doc/crm12Comb.html
 340d8f75ab84aae9aa53c9d9c1dbf2b5 *man/ODC_plot.Rd
 e652b90de04702dfda6a9e97203c9a7c *man/SIM_phase_I_II.Rd
 41dab4cc45d4fe4e5bde91c551697675 *man/doseComb_to_mat.Rd
